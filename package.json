@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "discord-player": "^5.3.2",
+    "discord.js": "^14.6.0",
+    "googlethis": "^1.6.0",
+    "math": "^0.0.3",
+    "play-dl": "^1.9.6"
+  }
+}
