@@ -209,7 +209,7 @@ client.on("messageCreate", async (message) => {
                         name: "query",
                         type: 3,
                         description: "The song you want to play",
-                        required: false
+                        required: true
                     }
                 ]
             },
@@ -226,6 +226,10 @@ client.on("messageCreate", async (message) => {
                 description: "Stop the player"
             },
             {
+                name:"resume",
+                description:"Resume the player"
+            },
+            {
                 name: "ethan",
                 description: "Ethan quote"
             },
@@ -235,7 +239,11 @@ client.on("messageCreate", async (message) => {
             },
             {
                 name:"help",
-                description:"print out the help message"
+                description:"shows the help message"
+            },
+            {
+                name:"queue",
+                description:"shows the current queue"
             }
         ]);
         console.log("Deployed");
@@ -258,58 +266,48 @@ client.on("interactionCreate", async (interaction) => {
         await interaction.deferReply();
 
         const query = interaction.options.getString("query");
-        if (query===null){
-            try{
-                queue.setPaused(0);
-                return void interaction.followUp({content: "resuming..."});
-            }catch(err){
-                return void interaction.followUp({content:"nothing to resume"});
-            }
+        let searchResult;
+        try {
+            searchResult = await player.search(query, {requestedBy: interaction.user});
+        } catch(ex) {
+            return interaction.followUp({content: `something happend womp ${ex.toString()}`})
+        }
+        
+        if (!searchResult || !searchResult.tracks.length)
+            return interaction.followUp({ content: "No results were found!" });
+
+        
+        if(!queue){
+            queue = await player.createQueue(interaction.guild, {
+                metadata: { channel: interaction.channel},
+                async onBeforeCreateStream(track, source, _queue) {
+                    // only trap youtube source
+                    if (source === "youtube") {
+                        // track here would be youtube track
+                        return (await playdl.stream(track.url, { discordPlayerCompatibility : true })).stream;
+                        // we must return readable stream or void (returning void means telling discord-player to look for default extractor)
+                    }
+                }
+            });
         }
         else{
-
-            let searchResult;
-            try {
-                searchResult = await player.search(query, {requestedBy: interaction.user});
-            } catch(ex) {
-                return interaction.followUp({content: `something happend womp ${ex.toString()}`})
-            }
-            
-            if (!searchResult || !searchResult.tracks.length)
-                return interaction.followUp({ content: "No results were found!" });
-
-            
-            if(!queue){
-                queue = await player.createQueue(interaction.guild, {
-                    metadata: { channel: interaction.channel},
-                    async onBeforeCreateStream(track, source, _queue) {
-                        // only trap youtube source
-                        if (source === "youtube") {
-                            // track here would be youtube track
-                            return (await playdl.stream(track.url, { discordPlayerCompatibility : true })).stream;
-                            // we must return readable stream or void (returning void means telling discord-player to look for default extractor)
-                        }
-                    }
-                });
-            }
-            else{
-                queue=player.getQueue(interaction.guildId)
-            }
-
-            try {
-                if (!queue.connection) await queue.connect(interaction.member.voice.channel);
-            } catch {
-                return await interaction.followUp({ content: "Could not join your voice channel!" });
-            }
-
-            await interaction.followUp({content: `⏱ | Loading your track...`});
-            // console.log({searchResult});
-            // console.log(searchResult.tracks[0].url);
-
-            queue.addTrack(searchResult.tracks[0]);
-
-            if (!queue.playing) await queue.play();
+            queue=player.getQueue(interaction.guildId)
         }
+
+        try {
+            if (!queue.connection) await queue.connect(interaction.member.voice.channel);
+        } catch {
+            return await interaction.followUp({ content: "Could not join your voice channel, try again" });
+        }
+
+        await interaction.followUp({content: `⏱ | Loading your track...`});
+        // console.log({searchResult});
+        // console.log(searchResult.tracks[0].url);
+
+        queue.addTrack(searchResult.tracks[0]);
+
+        if (!queue.playing) await queue.play();
+    
     } else if (interaction.commandName === "skip") {
         await interaction.deferReply();
         const queue = player.getQueue(interaction.guildId);
@@ -334,7 +332,6 @@ client.on("interactionCreate", async (interaction) => {
     } else if(interaction.commandName==="resume") {
         await interaction.deferReply();
         const queue = player.getQueue(interaction.guildId);
-        if(queue.playing) return void interaction.followUp({content: "music already playing"});
         queue.setPaused(0);
         return void interaction.followUp({content: "resuming"});
     }else if (interaction.commandName === "ethan"){
@@ -354,9 +351,15 @@ client.on("interactionCreate", async (interaction) => {
         return void interaction.followUp({ files: [vpic], content: vmessage  });
     }else if(interaction.commandName==="help"){
         await interaction.deferReply();
-        message="This music bot has the following functions:\n/Play - if given a query, will try to play the song. If the player is paused, provide no query and this will resume the song playing.\n/Pause - This will pause the player.\n/Skip - This will skip the current song.\n/Stop - This will stop the player.\n/Ethan - This will give you a special message and picture from Ethan!\n/Violet - This will give you a nice quote and picture of Violet!\n/Help - This message will print again.\n";
+        message="This music bot has the following functions:\n/Play will try to play the song provided.\n/Pause - This will pause the player.\n/Resume - This will resume the player.\n/Skip - This will skip the current song.\n/Stop - This will stop the player.\n/Ethan - This will give you a special message and picture from Ethan!\n/Violet - This will give you a nice quote and picture of Violet!\n/Help - This message will print again.\n";
         return void interaction.followUp({content: message});
-    } else {
+    }else if (interaction.commandName==="queue"){
+        await interaction.deferReply();
+        const queue = player.getQueue(interaction.guildId);
+        if(!queue) return void interaction.followUp({content: "queue is empty"});
+        console.log(queue.tracks.forEach.toString());
+        return void interaction.followUp({content: queue.tracks.toString()});
+    }else {
         interaction.reply({
             content: "Unknown command!",
             ephemeral: true
