@@ -88,7 +88,7 @@ const messagePrompts=[
     'Wow! Thanks for the hilarious meme! I really appreciate it!'
   ]
 
-const vpics=["./violet/moon.jpg"]
+const vpics=["./violet/moon.JPG"]
 
 const vquote=[
     "I have no mercy or compassion in me for a society that will crush people, and then penalize them for not being able to stand up under the weight.",
@@ -255,7 +255,29 @@ client.on("interactionCreate", async (interaction) => {
     if (!interaction.isCommand() || !interaction.guildId) return;
 
     if (!interaction.member.voice.channel) {
-        return void interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
+        if (interaction.commandName === "ethan"){
+            await interaction.deferReply();
+            let messageChoice= Math.floor(Math.random()*messagePrompts.length);
+            let message = messagePrompts[messageChoice];
+            let picChoice= Math.floor(Math.random()*picops.length);
+            let pic= picops[picChoice]
+            return void interaction.followUp({ files: [pic], content: message  });
+        }else if (interaction.commandName === "violet"){
+            await interaction.deferReply();
+            let vmessageChoice= Math.floor(Math.random()*vquote.length);
+            let vmessage = vquote[vmessageChoice];
+            let vpicChoice= Math.floor(Math.random()*vpics.length);
+            let vpic= vpics[vpicChoice]
+            
+            return void interaction.followUp({ files: [vpic], content: vmessage  });
+        }else if(interaction.commandName==="help"){
+            await interaction.deferReply();
+            message="This music bot has the following functions:\n/Play will try to play the song provided.\n/Pause - This will pause the player.\n/Resume - This will resume the player.\n/Skip - This will skip the current song.\n/Stop - This will stop the player.\n/Ethan - This will give you a special message and picture from Ethan!\n/Violet - This will give you a nice quote and picture of Violet!\n/Help - This message will print again.\n";
+            return void interaction.followUp({content: message});
+        }else{
+            return void interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
+        }
+        
     }
 
     // if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) {
@@ -334,6 +356,12 @@ client.on("interactionCreate", async (interaction) => {
         const queue = player.getQueue(interaction.guildId);
         queue.setPaused(0);
         return void interaction.followUp({content: "resuming"});
+    }else if (interaction.commandName==="queue"){
+        await interaction.deferReply();
+        const queue = player.getQueue(interaction.guildId);
+        if(!queue) return void interaction.followUp({content: "queue is empty"});
+        console.log(queue.tracks.forEach.toString());
+        return void interaction.followUp({content: queue.tracks.toString()});
     }else if (interaction.commandName === "ethan"){
         await interaction.deferReply();
         let messageChoice= Math.floor(Math.random()*messagePrompts.length);
@@ -341,7 +369,7 @@ client.on("interactionCreate", async (interaction) => {
         let picChoice= Math.floor(Math.random()*picops.length);
         let pic= picops[picChoice]
         return void interaction.followUp({ files: [pic], content: message  });
-    } else if (interaction.commandName === "violet"){
+    }else if (interaction.commandName === "violet"){
         await interaction.deferReply();
         let vmessageChoice= Math.floor(Math.random()*vquote.length);
         let vmessage = vquote[vmessageChoice];
@@ -353,12 +381,6 @@ client.on("interactionCreate", async (interaction) => {
         await interaction.deferReply();
         message="This music bot has the following functions:\n/Play will try to play the song provided.\n/Pause - This will pause the player.\n/Resume - This will resume the player.\n/Skip - This will skip the current song.\n/Stop - This will stop the player.\n/Ethan - This will give you a special message and picture from Ethan!\n/Violet - This will give you a nice quote and picture of Violet!\n/Help - This message will print again.\n";
         return void interaction.followUp({content: message});
-    }else if (interaction.commandName==="queue"){
-        await interaction.deferReply();
-        const queue = player.getQueue(interaction.guildId);
-        if(!queue) return void interaction.followUp({content: "queue is empty"});
-        console.log(queue.tracks.forEach.toString());
-        return void interaction.followUp({content: queue.tracks.toString()});
     }else {
         interaction.reply({
             content: "Unknown command!",
