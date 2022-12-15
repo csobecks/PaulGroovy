@@ -141,6 +141,9 @@ const player = new Player(client,
         filter:"audioonly",
         quality: 'highestaudio',
         highWaterMark: 1 << 25
+    },
+    connectionTimeout:{
+        
     }
 });
 
@@ -289,6 +292,7 @@ client.on("interactionCreate", async (interaction) => {
 
         const query = interaction.options.getString("query");
         let searchResult;
+        let queue;
         try {
             searchResult = await player.search(query, {requestedBy: interaction.user});
         } catch(ex) {
@@ -318,14 +322,13 @@ client.on("interactionCreate", async (interaction) => {
 
         try {
             if (!queue.connection) await queue.connect(interaction.member.voice.channel);
-        } catch {
+        } catch(er) {
+            console.log(er.toString());
             return await interaction.followUp({ content: "Could not join your voice channel, try again" });
         }
 
         await interaction.followUp({content: `⏱ | Loading your track...`});
-        // console.log({searchResult});
-        // console.log(searchResult.tracks[0].url);
-
+        
         queue.addTrack(searchResult.tracks[0]);
 
         if (!queue.playing) await queue.play();
