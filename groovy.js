@@ -141,11 +141,13 @@ const player = new Player(client,
         filter:"audioonly",
         quality: 'highestaudio',
         highWaterMark: 1 << 25
-    },
-    connectionTimeout:{
-        
     }
 });
+
+ffmpeg_options={
+    "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
+    'options':'-vn',
+}
 
 client.on("ready", async (client) => {
     console.log("Bot is online!");
@@ -328,7 +330,9 @@ client.on("interactionCreate", async (interaction) => {
         }
 
         await interaction.followUp({content: `⏱ | Loading your track...`});
-        
+        // console.log({searchResult});
+        // console.log(searchResult.tracks[0].url);
+
         queue.addTrack(searchResult.tracks[0]);
 
         if (!queue.playing) await queue.play();
