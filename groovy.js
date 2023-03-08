@@ -140,14 +140,12 @@ const player = new Player(client,
     ytdlDownloadOptions:{
         filter:"audioonly",
         quality: 'highestaudio',
+        dlChunkSize:0,
         highWaterMark: 1 << 25
     }
 });
 
-ffmpeg_options={
-    "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
-    'options':'-vn',
-}
+
 
 client.on("ready", async (client) => {
     console.log("Bot is online!");
@@ -160,7 +158,7 @@ client.on("ready", async (client) => {
 client.on("error", console.error);
 client.on("warn", console.warn);
 
-player.on("error",(queue,error)=>{
+player.events.on("error",(queue,error)=>{
     console.log(`[${queue.guild.name}]Error emitted from the queue: ${error.message}`);
     queue=player.getQueue(queue.guild);
     queue.metadata.channel.send("cannot complete song request");
@@ -174,28 +172,27 @@ player.on("error",(queue,error)=>{
 //     });
 // })
 
-player.on("connectionError", (queue, error) => {
+player.events.on("playerError", (queue, error) => {
     console.log(`[${queue.guild.name}] Error emitted from the connection: ${error.message}`);
-    // console.log(`Error emitted from the connection: ${error.name}`);
 });
 
-player.on("trackStart", (queue, track) => {
-    queue.metadata.channel.send(`🎶 | Started playing: **${track.title}** in **${queue.connection.channel.name}**!`);
+player.events.on("playerStart", (queue, track) => {
+    queue.metadata.channel.send(`Started playing: **${track.title}**`);
 });
 
-player.on("trackAdd", (queue, track) => {
+player.events.on("audioTracksAdd", (queue, track) => {
     queue.metadata.channel.send(`🎶 | Track **${track.title}** queued!`);
 });
 
-player.on("botDisconnect", (queue) => {
+player.events.on("disconnect", (queue) => {
     queue.metadata.channel.send("❌ | I was manually disconnected from the voice channel, clearing queue!");
 });
 
-player.on("channelEmpty", (queue) => {
+player.events.on("emptyChannel", (queue) => {
     queue.metadata.channel.send("❌ | Nobody is in the voice channel, leaving...");
 });
 
-player.on("queueEnd", (queue) => {
+player.events.on("emptyQueue", (queue) => {
     queue.metadata.channel.send("✅ | Queue finished!");
 });
 
@@ -245,11 +242,11 @@ client.on("messageCreate", async (message) => {
             {
                 name:"help",
                 description:"shows the help message"
-            },
-            {
-                name:"queue",
-                description:"shows the current queue"
             }
+            // {
+            //     name:"queue",
+            //     description:"shows the current queue"
+            // }
         ]);
         console.log("Deployed");
         await message.reply("Deployed!");
@@ -292,7 +289,7 @@ client.on("interactionCreate", async (interaction) => {
     if (interaction.commandName === "play") {
         await interaction.deferReply();
 
-        const query = interaction.options.getString("query");
+        const query = interaction.options.getString("query",true);
         let searchResult;
         let queue;
         try {
@@ -306,16 +303,14 @@ client.on("interactionCreate", async (interaction) => {
 
         
         if(!queue){
-            queue = await player.createQueue(interaction.guild, {
-                metadata: { channel: interaction.channel},
-                async onBeforeCreateStream(track, source, _queue) {
-                    // only trap youtube source
-                    if (source === "youtube") {
-                        // track here would be youtube track
-                        return (await playdl.stream(track.url, { discordPlayerCompatibility : true })).stream;
-                        // we must return readable stream or void (returning void means telling discord-player to look for default extractor)
-                    }
-                }
+            queue = await player.nodes.create(interaction.guildId,{
+                metadata:{ channel: interaction.channel,
+                client: interaction.user.guild,
+            requestedBy: interaction.user
+            },
+            leaveOnEmpty: false,
+            leaveOnEnd:true,
+            leaveOnEndCooldown:300000
             });
         }
         else{
@@ -335,40 +330,40 @@ client.on("interactionCreate", async (interaction) => {
 
         queue.addTrack(searchResult.tracks[0]);
 
-        if (!queue.playing) await queue.play();
+        if (!queue.playing) await queue.node.play();
     
     } else if (interaction.commandName === "skip") {
         await interaction.deferReply();
-        const queue = player.getQueue(interaction.guildId);
-        if (!queue || !queue.playing) return void interaction.followUp({ content: "❌ | No music is being played!" });
-        const currentTrack = queue.current;
-        const success = queue.skip();
+        const queue = player.nodes.get(interaction.guildId);
+        if (!queue || !queue.node.isPlaying) return void interaction.followUp({ content: "❌ | No music is being played!" });
+        const currentTrack = queue.currentTrack;
+        const success = queue.node.skip();
         return void interaction.followUp({
             content: success ? `✅ | Skipped **${currentTrack}**!` : "❌ | Something went wrong!"
         });
     } else if (interaction.commandName === "stop") {
         await interaction.deferReply();
-        const queue = player.getQueue(interaction.guildId);
-        if (!queue || !queue.playing) return void interaction.followUp({ content: "❌ | No music is being played!" });
-        queue.destroy();
+        const queue = player.nodes.get(interaction.guildId);
+        if (!queue || !queue.node.isPlaying) return void interaction.followUp({ content: "❌ | No music is being played!" });
+        queue.delete();
         return void interaction.followUp({ content: "🛑 | Stopped the player!" });
     } else if (interaction.commandName==="pause") {
         await interaction.deferReply();
-        const queue = player.getQueue(interaction.guildId);
-        if (!queue || !queue.playing) return void interaction.followUp({ content: "❌ | No music is being played!" });
-        queue.setPaused(1);
+        const queue = player.nodes.get(interaction.guildId);
+        if (!queue || !queue.node.isPlaying) return void interaction.followUp({ content: "❌ | No music is being played!" });
+        queue.node.pause();
         return void interaction.followUp({content: "pausing"});
     } else if(interaction.commandName==="resume") {
         await interaction.deferReply();
-        const queue = player.getQueue(interaction.guildId);
-        queue.setPaused(0);
+        const queue = player.nodes.get(interaction.guildId);
+        queue.node.resume();
         return void interaction.followUp({content: "resuming"});
     }else if (interaction.commandName==="queue"){
         await interaction.deferReply();
-        const queue = player.getQueue(interaction.guildId);
-        if(!queue) return void interaction.followUp({content: "queue is empty"});
-        console.log(queue.tracks.forEach.toString());
-        return void interaction.followUp({content: queue.tracks.toString()});
+        // const queue = player.getQueue(interaction.guildId);
+        // if(!queue) return void interaction.followUp({content: "queue is empty"});
+        // console.log(queue.tracks.forEach.toString());
+        return void interaction.followUp({content: 'under construction'});
     }else if (interaction.commandName === "ethan"){
         await interaction.deferReply();
         let messageChoice= Math.floor(Math.random()*messagePrompts.length);
