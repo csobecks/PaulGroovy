@@ -141,7 +141,7 @@ const player = new Player(client,
         filter:"audioonly",
         quality: 'highestaudio',
         dlChunkSize:0,
-        highWaterMark: 1 << 25
+        highWaterMark: 1 << 30
     }
 });
 
@@ -182,6 +182,10 @@ player.events.on("playerStart", (queue, track) => {
 
 player.events.on("audioTracksAdd", (queue, track) => {
     queue.metadata.channel.send(`🎶 | Track **${track.title}** queued!`);
+});
+
+player.events.on("audioTrackAdd", (queue, track) => {
+    queue.metadata.channel.send(`Track **${track.title}** queued!`);
 });
 
 player.events.on("disconnect", (queue) => {
@@ -330,8 +334,7 @@ client.on("interactionCreate", async (interaction) => {
 
         queue.addTrack(searchResult.tracks[0]);
 
-        if (!queue.playing) await queue.node.play();
-    
+        if (!queue.node.isPlaying()) await queue.node.play();
     } else if (interaction.commandName === "skip") {
         await interaction.deferReply();
         const queue = player.nodes.get(interaction.guildId);
