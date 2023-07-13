@@ -140,11 +140,13 @@ const player = new Player(client,
     ytdlDownloadOptions:{
         filter:"audioonly",
         quality: 'highestaudio',
-        dlChunkSize:0,
-        highWaterMark: 1 << 30
+        dlChunkSize:1024*1024,
+        type: 'opus',
+        highWaterMark: 1 << 25
     }
 });
 
+(async() => await player.extractors.loadDefault())();
 
 
 client.on("ready", async (client) => {
@@ -181,7 +183,7 @@ player.events.on("playerStart", (queue, track) => {
 });
 
 player.events.on("audioTracksAdd", (queue, track) => {
-    queue.metadata.channel.send(`🎶 | Track **${track.title}** queued!`);
+    queue.metadata.channel.send(` | Track **${track.title}** queued!`);
 });
 
 player.events.on("audioTrackAdd", (queue, track) => {
@@ -297,7 +299,7 @@ client.on("interactionCreate", async (interaction) => {
         let searchResult;
         let queue;
         try {
-            searchResult = await player.search(query, {requestedBy: interaction.user});
+            searchResult = await player.search(query, {requestedBy: interaction.user, fallbackSearchEngine: 'auto'});
         } catch(ex) {
             return interaction.followUp({content: `something happend womp ${ex.toString()}`})
         }
@@ -349,7 +351,7 @@ client.on("interactionCreate", async (interaction) => {
         const queue = player.nodes.get(interaction.guildId);
         if (!queue || !queue.node.isPlaying) return void interaction.followUp({ content: "❌ | No music is being played!" });
         queue.delete();
-        return void interaction.followUp({ content: "🛑 | Stopped the player!" });
+        return void interaction.followUp({ content: " | Stopped the player!" });
     } else if (interaction.commandName==="pause") {
         await interaction.deferReply();
         const queue = player.nodes.get(interaction.guildId);
