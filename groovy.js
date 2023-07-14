@@ -4,6 +4,7 @@ const playdl = require("play-dl");
 const config = require("./config.json");
 const COOKIE = 'VISITOR_INFO1_LIVE=Z__vCrcG6lE; _ga=GA1.2.1990068215.1657892905; LOGIN_INFO=AFmmF2swRQIhAKM97YCcGTegaO9BsxU3lVC5cWwIVLk615JRbAVWIVVlAiAPv3hruowhNtMcybiZ-bkeJ2Z07IV2YgGVS7lmkLseIQ:QUQ3MjNmemMtaV9ucnp6amxJcFF6RnBBcE5Lc3g0V3Q0cUJyVlJxY2h3d041UUtnRGk2NHBmdjJyWDFPanEwaVBmc3JhRnlRTzhTUU5wU3d5WFBOUUtOR2VxbG00bzlqb2FULTBJSTV5UFR2MWlnWW5lenpEcUNnQlM5bU5IU3pRdVVsQV9VT3J1RjFtMk9NWWVNSUpHS2pZUnBUdEtJVFJQV1dkSHhhVGNkMWtEX0RwUkkyNjhad0Y2cURTdUhsQXRjcEstNEhMUTBweHFCc0xYTXRRQmFqRzlxU0ZST0Fydw==; SID=QQi-cbMT5_kKEArKirWGUgUVzCVecFNPBvRjgV29T9tscDLKiCcG0wZy7PA4qnod2z55lA.; __Secure-1PSID=QQi-cbMT5_kKEArKirWGUgUVzCVecFNPBvRjgV29T9tscDLK9toDT2qIkech_bCm9Vdp9Q.; __Secure-3PSID=QQi-cbMT5_kKEArKirWGUgUVzCVecFNPBvRjgV29T9tscDLKBr9VqCkcRkPHAaAQy65fyw.; HSID=AGOAqah32iIQtR2mc; SSID=AkLVCthH9ZZnvcMsa; APISID=DMh8vTNqPlqCkkds/AE8tEW3YQ8y74FZ3l; SAPISID=3N7fFFJqQhySOq5X/AjhT8tXOaW69yRdO8; __Secure-1PAPISID=3N7fFFJqQhySOq5X/AjhT8tXOaW69yRdO8; __Secure-3PAPISID=3N7fFFJqQhySOq5X/AjhT8tXOaW69yRdO8; PREF=f6=40000080&tz=America.New_York&f7=100; YSC=T7Nqbpebcis; SIDCC=AIKkIs3EdoXF47mekq-lUPShLONX1NiTR-bwWle44cpCyptxjxIge-hBDLaHpHsG1oNtMO79wQ; __Secure-1PSIDCC=AIKkIs2yTuqULU3xWl2NPBLBL1lTZXyAXgbcMKvfvhrNzHjSc5yhEcVRIhZScx8LBWXnYhf8hg; __Secure-3PSIDCC=AIKkIs3-ARpb_REN3kEnxs8L1ab4Bfd4VsOuBOuyjkTRdThdpxrlbZDHxEM-SfWSNviUP7mLmQ';
 
+
 const picops = [
     "./ethan/ethan.png",
     "./ethan/ethan1.png",
@@ -180,6 +181,7 @@ player.events.on("playerError", (queue, error) => {
 
 player.events.on("playerStart", (queue, track) => {
     queue.metadata.channel.send(`Started playing: **${track.title}**`);
+    queue.leaveOnEndCooldown=120000;
 });
 
 player.events.on("audioTracksAdd", (queue, track) => {
@@ -191,7 +193,7 @@ player.events.on("audioTrackAdd", (queue, track) => {
 });
 
 player.events.on("disconnect", (queue) => {
-    queue.metadata.channel.send("❌ | I was manually disconnected from the voice channel, clearing queue!");
+    queue.metadata.channel.send("❌ | I disconnected from the voice channel, clearing queue!");
 });
 
 player.events.on("emptyChannel", (queue) => {
@@ -200,6 +202,7 @@ player.events.on("emptyChannel", (queue) => {
 
 player.events.on("emptyQueue", (queue) => {
     queue.metadata.channel.send("✅ | Queue finished!");
+    // queue.leaveOnEmpty=false;
 });
 
 
@@ -248,11 +251,23 @@ client.on("messageCreate", async (message) => {
             {
                 name:"help",
                 description:"shows the help message"
+            },
+            {
+                name:"queue",
+                description:"shows the current queue"
+            },
+            {
+                name:"bitrate",
+                description:"set the bitrate for the player",
+                options: [
+                    {
+                        name: "bitrate",
+                        description: "pick a bitrate",
+                        type: 3,
+                        required: true
+                    }
+                ]
             }
-            // {
-            //     name:"queue",
-            //     description:"shows the current queue"
-            // }
         ]);
         console.log("Deployed");
         await message.reply("Deployed!");
@@ -314,9 +329,8 @@ client.on("interactionCreate", async (interaction) => {
                 client: interaction.user.guild,
             requestedBy: interaction.user
             },
-            leaveOnEmpty: false,
-            leaveOnEnd:true,
-            leaveOnEndCooldown:300000
+            leaveOnEnd: true,
+            leaveOnEndCooldown:120000
             });
         }
         else{
@@ -365,10 +379,15 @@ client.on("interactionCreate", async (interaction) => {
         return void interaction.followUp({content: "resuming"});
     }else if (interaction.commandName==="queue"){
         await interaction.deferReply();
-        // const queue = player.getQueue(interaction.guildId);
-        // if(!queue) return void interaction.followUp({content: "queue is empty"});
-        // console.log(queue.tracks.forEach.toString());
-        return void interaction.followUp({content: 'under construction'});
+        const queue = player.nodes.get(interaction.guildId);
+        if(!queue) return void interaction.followUp({content: "queue is empty"});
+        trackAr=queue.tracks.toArray();
+        tracklength=trackAr.length;
+        // console.log(queue.tracks.toArray());
+        for(let i =0; i<tracklength; i++){
+            numberhold=i+1;
+            await interaction.followUp({content: `Track ${numberhold}: ${trackAr[i].url}`});
+        }
     }else if (interaction.commandName === "ethan"){
         await interaction.deferReply();
         let messageChoice= Math.floor(Math.random()*messagePrompts.length);
@@ -388,6 +407,12 @@ client.on("interactionCreate", async (interaction) => {
         await interaction.deferReply();
         message="This music bot has the following functions:\n/Play will try to play the song provided.\n/Pause - This will pause the player.\n/Resume - This will resume the player.\n/Skip - This will skip the current song.\n/Stop - This will stop the player.\n/Ethan - This will give you a special message and picture from Ethan!\n/Violet - This will give you a nice quote and picture of Violet!\n/Help - This message will print again.\n";
         return void interaction.followUp({content: message});
+    }else if(interaction.commandName==="bitrate"){
+        await interaction.deferReply();
+        const queue = useQueue(interaction.guildId);
+        const value=interaction.options.getInteger('bitrate');
+        queue.node.setBitrate(value);
+        return void interaction.followUp ({content: `bitrate set to ${value} bits `});
     }else {
         interaction.reply({
             content: "Unknown command!",
