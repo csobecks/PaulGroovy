@@ -1,6 +1,7 @@
 const { Client } = require("discord.js");
 const { Player } = require("discord-player");
 const playdl = require("play-dl");
+const google = require("googlethis");
 const config = require("./config.json");
 const COOKIE = 'VISITOR_INFO1_LIVE=Z__vCrcG6lE; _ga=GA1.2.1990068215.1657892905; LOGIN_INFO=AFmmF2swRQIhAKM97YCcGTegaO9BsxU3lVC5cWwIVLk615JRbAVWIVVlAiAPv3hruowhNtMcybiZ-bkeJ2Z07IV2YgGVS7lmkLseIQ:QUQ3MjNmemMtaV9ucnp6amxJcFF6RnBBcE5Lc3g0V3Q0cUJyVlJxY2h3d041UUtnRGk2NHBmdjJyWDFPanEwaVBmc3JhRnlRTzhTUU5wU3d5WFBOUUtOR2VxbG00bzlqb2FULTBJSTV5UFR2MWlnWW5lenpEcUNnQlM5bU5IU3pRdVVsQV9VT3J1RjFtMk9NWWVNSUpHS2pZUnBUdEtJVFJQV1dkSHhhVGNkMWtEX0RwUkkyNjhad0Y2cURTdUhsQXRjcEstNEhMUTBweHFCc0xYTXRRQmFqRzlxU0ZST0Fydw==; SID=QQi-cbMT5_kKEArKirWGUgUVzCVecFNPBvRjgV29T9tscDLKiCcG0wZy7PA4qnod2z55lA.; __Secure-1PSID=QQi-cbMT5_kKEArKirWGUgUVzCVecFNPBvRjgV29T9tscDLK9toDT2qIkech_bCm9Vdp9Q.; __Secure-3PSID=QQi-cbMT5_kKEArKirWGUgUVzCVecFNPBvRjgV29T9tscDLKBr9VqCkcRkPHAaAQy65fyw.; HSID=AGOAqah32iIQtR2mc; SSID=AkLVCthH9ZZnvcMsa; APISID=DMh8vTNqPlqCkkds/AE8tEW3YQ8y74FZ3l; SAPISID=3N7fFFJqQhySOq5X/AjhT8tXOaW69yRdO8; __Secure-1PAPISID=3N7fFFJqQhySOq5X/AjhT8tXOaW69yRdO8; __Secure-3PAPISID=3N7fFFJqQhySOq5X/AjhT8tXOaW69yRdO8; PREF=f6=40000080&tz=America.New_York&f7=100; YSC=T7Nqbpebcis; SIDCC=AIKkIs3EdoXF47mekq-lUPShLONX1NiTR-bwWle44cpCyptxjxIge-hBDLaHpHsG1oNtMO79wQ; __Secure-1PSIDCC=AIKkIs2yTuqULU3xWl2NPBLBL1lTZXyAXgbcMKvfvhrNzHjSc5yhEcVRIhZScx8LBWXnYhf8hg; __Secure-3PSIDCC=AIKkIs3-ARpb_REN3kEnxs8L1ab4Bfd4VsOuBOuyjkTRdThdpxrlbZDHxEM-SfWSNviUP7mLmQ';
 
@@ -131,20 +132,20 @@ let queue;
 
 const player = new Player(client,
     {
-    ytdlOptions: {
-        requestOptions:{
-            Headers:{
-                cookie: COOKIE
-            }
-        }
-    },
-    ytdlDownloadOptions:{
-        filter:"audioonly",
-        quality: 'highestaudio',
-        dlChunkSize:1024*1024,
-        type: 'opus',
-        highWaterMark: 1 << 25
-    }
+    // ytdlOptions: {
+    //     requestOptions:{
+    //         Headers:{
+    //             cookie: COOKIE
+    //         }
+    //     }
+    // },
+    // ytdlDownloadOptions:{
+    //     filter:"audioonly",
+    //     quality: 'highestaudio',
+    //     dlChunkSize:1024*1024,
+    //     type: 'opus',
+    //     highWaterMark: 1 << 25
+    // }
 });
 
 (async() => await player.extractors.loadDefault())();
@@ -267,6 +268,18 @@ client.on("messageCreate", async (message) => {
                         required: true
                     }
                 ]
+            },
+            {
+                name:"eggorleg",
+                description:"get an egg or a leg"
+            },
+            {
+                name:"paulpager",
+                description:"beep beep beep beep beep"
+            },
+            {
+                name:"d20roll",
+                description:"roll a d20"
             }
         ]);
         console.log("Deployed");
@@ -295,17 +308,49 @@ client.on("interactionCreate", async (interaction) => {
             return void interaction.followUp({ files: [vpic], content: vmessage  });
         }else if(interaction.commandName==="help"){
             await interaction.deferReply();
-            message="This music bot has the following functions:\n/Play will try to play the song provided.\n/Pause - This will pause the player.\n/Resume - This will resume the player.\n/Skip - This will skip the current song.\n/Stop - This will stop the player.\n/Ethan - This will give you a special message and picture from Ethan!\n/Violet - This will give you a nice quote and picture of Violet!\n/Help - This message will print again.\n";
+            message="This music bot has the following functions:\n/Play will try to play the song provided.\n/Pause - This will pause the player.\n/Resume - This will resume the player.\n/Skip - This will skip the current song.\n/Stop - This will stop the player.\n/queue - show the current queue.\n/Ethan - This will give you a special message and picture from Ethan!\n/Violet - This will give you a nice quote and picture of Violet!\n/eggorleg - get an egg or a leg\n/paulpager - page paul over discord!\n/d20roll - roll a d20 and get a number\n/bitrate - pick a new value for groovybot bitrate\n/Help - This message will print again.\n";
             return void interaction.followUp({content: message});
+        }else if(interaction.commandName==="d20roll"){
+            await interaction.deferReply();
+            let roll=Math.floor(Math.random()*20)+1;
+
+            if(roll==1){
+                return interaction.followUp({content:"Nat 1, you fucking suck!"});
+            }else if(roll==20){
+                return interaction.followUp({content:"Nat 20! fuck yeah!"});
+            }else{
+                return interaction.followUp({content: `You rolled a ${roll}`});
+            }
+        }else if(interaction.commandName==="eggorleg"){
+            await interaction.deferReply();
+            const choice=2*Math.round(Math.random());
+            
+            if(choice>1){
+                query="egg";
+            }
+            else{
+                query="leg";
+            }
+            const images = await google.image(query,{safe:false});
+            const choice2=(images.length)*Math.round(Math.random());
+            
+            //console.log(choice2);
+            
+            if(typeof images[choice2]==="undefined"){return interaction.followUp({content:`${query}`});}
+            else{return interaction.followUp({content:`${query}\n${images[choice2].url}`});}
+        }else if(interaction.commandName==="paulpager"){
+            const user = await client.users.fetch('98474303804149760',false).then((user)=> {
+                for(var i; i<5;i++){
+                    user.send("beep");
+                }
+            });
+            await interaction.deferReply();
+            return void interaction.followUp({content: "beeping paul"});
         }else{
             return void interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
         }
         
     }
-
-    // if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) {
-    //     return void interaction.reply({ content: "You are not in my voice channel!", ephemeral: true });
-    // }
 
     if (interaction.commandName === "play") {
         await interaction.deferReply();
@@ -334,7 +379,7 @@ client.on("interactionCreate", async (interaction) => {
             });
         }
         else{
-            queue=player.getQueue(interaction.guildId)
+            queue=player.useQueue(interaction.guildId)
         }
 
         try {
@@ -344,7 +389,7 @@ client.on("interactionCreate", async (interaction) => {
             return await interaction.followUp({ content: "Could not join your voice channel, try again" });
         }
 
-        await interaction.followUp({content: `⏱ | Loading your track...`});
+        await interaction.followUp({content: `Loading your track...`});
         // console.log({searchResult});
         // console.log(searchResult.tracks[0].url);
 
@@ -354,22 +399,22 @@ client.on("interactionCreate", async (interaction) => {
     } else if (interaction.commandName === "skip") {
         await interaction.deferReply();
         const queue = player.nodes.get(interaction.guildId);
-        if (!queue || !queue.node.isPlaying) return void interaction.followUp({ content: "❌ | No music is being played!" });
+        if (!queue || !queue.node.isPlaying) return void interaction.followUp({ content: "No music is being played!" });
         const currentTrack = queue.currentTrack;
         const success = queue.node.skip();
         return void interaction.followUp({
-            content: success ? `✅ | Skipped **${currentTrack}**!` : "❌ | Something went wrong!"
+            content: success ? `Skipped **${currentTrack}**!` : "Something went wrong!"
         });
     } else if (interaction.commandName === "stop") {
         await interaction.deferReply();
         const queue = player.nodes.get(interaction.guildId);
-        if (!queue || !queue.node.isPlaying) return void interaction.followUp({ content: "❌ | No music is being played!" });
+        if (!queue || !queue.node.isPlaying) return void interaction.followUp({ content: "No music is being played!" });
         queue.delete();
-        return void interaction.followUp({ content: " | Stopped the player!" });
+        return void interaction.followUp({ content: "Stopped the player!" });
     } else if (interaction.commandName==="pause") {
         await interaction.deferReply();
         const queue = player.nodes.get(interaction.guildId);
-        if (!queue || !queue.node.isPlaying) return void interaction.followUp({ content: "❌ | No music is being played!" });
+        if (!queue || !queue.node.isPlaying) return void interaction.followUp({ content: "No music is being played!" });
         queue.node.pause();
         return void interaction.followUp({content: "pausing"});
     } else if(interaction.commandName==="resume") {
@@ -413,6 +458,42 @@ client.on("interactionCreate", async (interaction) => {
         const value=interaction.options.getInteger('bitrate');
         queue.node.setBitrate(value);
         return void interaction.followUp ({content: `bitrate set to ${value} bits `});
+    }else if(interaction.commandName==="eggorleg"){
+        await interaction.deferReply();
+        const choice=2*Math.round(Math.random());
+        
+        if(choice>1){
+            query="egg";
+        }
+        else{
+            query="leg";
+        }
+        const images = await google.image(query,{safe:false});
+        const choice2=(images.length)*Math.round(Math.random());
+        
+        //console.log(choice2);
+        
+        if(typeof images[choice2]==="undefined"){return interaction.followUp({content:`${query}`});}
+        else{return interaction.followUp({content:`${query}\n${images[choice2].url}`});}
+    }else if(interaction.commandName==="paulpager"){
+        const user = await client.users.fetch('98474303804149760',false).then((user)=> {
+            for(var i; i<5;i++){
+                user.send("beep");
+            }
+        });
+        await interaction.deferReply();
+        return void interaction.followUp({content: "beeping paul"});
+    }else if(interaction.commandName==="d20roll"){
+        await interaction.deferReply();
+        let roll=Math.floor(Math.random()*20)+1;
+
+        if(roll==1){
+            return interaction.followUp({content:"Nat 1, you fucking suck!"});
+        }else if(roll==20){
+            return interaction.followUp({content:"Nat 20! fuck yeah!"});
+        }else{
+            return interaction.followUp({content: `You rolled a ${roll}`});
+        }
     }else {
         interaction.reply({
             content: "Unknown command!",
