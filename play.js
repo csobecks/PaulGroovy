@@ -16,9 +16,10 @@ export async function play(interaction) {
                 leaveOnEmpty:true,
                 leaveOnEnd:true,
                 leaveOnEndCooldown:60000,
-                metadata:{channel: interaction.channel,
-                    client: interaction.user.guild,
-                    requestedBy: interaction.user}
+                metadata: interaction
+                // metadata:{channel: interaction.channel,
+                //     client: interaction.user.guild,
+                //     requestedBy: interaction.user}
             }
         });
 
