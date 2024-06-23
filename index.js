@@ -5,7 +5,7 @@ import  Client from "discord.js"
 import  Player from "discord-player"
 import object from "./config.json" assert { type: 'json' };
 
-const client = new Client({
+const client = new Discord.Client({
     intents: [
         'Guilds',
         'GuildVoiceStates',
