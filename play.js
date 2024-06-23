@@ -9,7 +9,7 @@ export async function play(interaction) {
     const query = interaction.options.getString('query',true);
 
     await interaction.deferReply();
-
+    console.log({channel,query,interaction});
     try{
         const{ track } = await player.play(channel,query,{
             nodeOptions:{
