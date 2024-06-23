@@ -9,7 +9,7 @@ import paulpager from "./paulpager.js"
 import eggorleg from "./eggorleg.js"
 import stop from "./stoptrack.js"
 import resume from "./resumetrack.js"
-// import bitrate from "./bitratetrack.js"
+import bitrate from "./bitratetrack.js"
 import currentqueue from "./currentqueue.js"
 
 export async function interactionHandler(interaction,client) {
