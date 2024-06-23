@@ -1,10 +1,11 @@
 import interactionHandler from "./interaction"
 import deployment from "./deploy"
 
-const { Client } = require("discord.js");
-const { Player } = require("discord-player");
-const google = require("googlethis");
-const config = require("./config.json");
+import  Client from "discord.js"
+import  Player from "discord-player"
+import config from "./config.json"
+
+const player = new Player(readyClient);
 
 const client = new Client({
     intents: [
@@ -24,8 +25,9 @@ client.on("ready", function (readyClient) {
         name:"Ram Ranch",
         type:2
     });
-    const player = new Player(readyClient);
 });
+
+
 
 client.on("error",console.error);
 client.on("warn",console.warn);

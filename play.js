@@ -1,4 +1,4 @@
-const { useMainPlayer } = require("discord-player");
+import useMainPlayer from "discord-player"
 
 export async function play(interaction) {
     const player = useMainPlayer();

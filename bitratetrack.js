@@ -1,4 +1,4 @@
-const {useQueue} = require("discord-player");
+import useQueue from "discord-player"
 
 export async function bitrate(interaction){
     const queue = useQueue(interaction.guildId);
