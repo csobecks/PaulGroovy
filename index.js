@@ -5,8 +5,6 @@ import  Client from "discord.js"
 import  Player from "discord-player"
 import object from "./config.json" assert { type: 'json' };
 
-const player = new Player(readyClient);
-
 const client = new Client({
     intents: [
         'Guilds',
@@ -26,6 +24,8 @@ client.on("ready", function (readyClient) {
         type:2
     });
 });
+
+const player = new Player(client);
 
 
 
