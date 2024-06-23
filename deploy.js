@@ -1,8 +1,8 @@
-export async function deployment(message,client) {
+export async function deployment(message) {
     if (message.author.bot || !message.guild) return;
-    if (!client.application?.owner) await client.application?.fetch();
+    // if (!client.application?.owner) await client.application?.fetch();
     
-    if (message.content.includes("!deploy") && message.author.id === client.application?.owner?.id) {
+    if (message.content.includes("!deploy")){ //&& message.author.id === client.application?.owner?.id) {
         await message.guild.commands.set([
             {
                 name: "play",
