@@ -32,7 +32,7 @@ const player = new Player.Player(client);
 client.on("error",console.error);
 client.on("warn",console.warn);
 
-player.extractors.loadDefault((ext));
+player.extractors.loadDefault();
 
 client.on("messageCreate", deployment);
 
