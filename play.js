@@ -2,6 +2,7 @@ import { useMainPlayer } from "discord-player"
 
 export async function play(interaction) {
     const player = useMainPlayer();
+    console.log({player});
     const channel = interaction.member.voice.channel;
     
     if(!channel) return interaction.reply('You are not connected to a voice channel!');
