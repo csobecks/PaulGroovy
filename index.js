@@ -1,7 +1,7 @@
 import { interactionHandler } from "./interaction.js"
 import { deployment } from "./deploy.js"
 
-import  Client from "discord.js"
+import  Discord from "discord.js"
 import  Player from "discord-player"
 import object from "./config.json" assert { type: 'json' };
 
