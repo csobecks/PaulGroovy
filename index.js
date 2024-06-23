@@ -87,9 +87,9 @@ player.events.on('playerError', (queue, error) => {
     console.log(error);
 });
 
-player.on('debug', async(message) =>{
-    console.log(`General player debug event: ${message}`);
-});
+// player.on('debug', async(message) =>{
+//     console.log(`General player debug event: ${message}`);
+// });
 player.events.on('debug', async(queue,message) => {
     console.log(`Player debug event: ${message}`);
 });
