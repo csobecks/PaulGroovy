@@ -1,5 +1,5 @@
-import interactionHandler from "./interaction.js"
-import deployment from "./deploy.js"
+import { interactionHandler } from "./interaction.js"
+import { deployment } from "./deploy.js"
 
 import  Client from "discord.js"
 import  Player from "discord-player"
