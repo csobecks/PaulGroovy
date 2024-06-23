@@ -1,5 +1,7 @@
 const { Client } = require("discord.js");
-const { Player } = require("discord-player");
+const { Player } = require('discord-player');
+const { useMainPlayer} = require('discord-player');
+const { YouTubeExtractor } = require('@discord-player/extractor');
 const playdl = require("play-dl");
 const google = require("googlethis");
 const config = require("./config.json");
@@ -130,25 +132,14 @@ const client = new Client({
 
 let queue;
 
-const player = new Player(client,
-    {
-    // ytdlOptions: {
-    //     requestOptions:{
-    //         Headers:{
-    //             cookie: COOKIE
-    //         }
-    //     }
-    // },
-    // ytdlDownloadOptions:{
-    //     filter:"audioonly",
-    //     quality: 'highestaudio',
-    //     dlChunkSize:1024*1024,
-    //     type: 'opus',
-    //     highWaterMark: 1 << 25
-    // }
-});
+const player = new Player(client);
 
-(async() => await player.extractors.loadDefault())();
+// const subscription =connection.subscription(player);
+
+// if(subscription){setTimeout(() => subscription.unsubscribe(), 10000)};
+
+(async() =>await player.extractors.loadDefault());
+
 
 
 client.on("ready", async (client) => {
@@ -163,9 +154,10 @@ client.on("error", console.error);
 client.on("warn", console.warn);
 
 player.events.on("error",(queue,error)=>{
-    console.log(`[${queue.guild.name}]Error emitted from the queue: ${error.message}`);
-    queue=player.getQueue(queue.guild);
-    queue.metadata.channel.send("cannot complete song request");
+    // console.log(`[${queue.guild.name}]Error emitted from the queue: ${error.message}`);
+    console.log(`error brother`);
+    // queue=player.getQueue(queue.guild);
+    // queue.metadata.channel.send("cannot complete song request");
     return 0;
 })
 
@@ -353,13 +345,14 @@ client.on("interactionCreate", async (interaction) => {
     }
 
     if (interaction.commandName === "play") {
+        const player = useMainPlayer();
         await interaction.deferReply();
 
         const query = interaction.options.getString("query",true);
         let searchResult;
         let queue;
         try {
-            searchResult = await player.search(query, {requestedBy: interaction.user, fallbackSearchEngine: 'auto'});
+            searchResult = await player.search(query, {requestedBy: interaction.user, searchEngine: `ext:${YouTubeExtractor.identifier}`});
         } catch(ex) {
             return interaction.followUp({content: `something happend womp ${ex.toString()}`})
         }
@@ -395,7 +388,7 @@ client.on("interactionCreate", async (interaction) => {
 
         queue.addTrack(searchResult.tracks[0]);
 
-        if (!queue.node.isPlaying()) await queue.node.play();
+        if (!queue.isPlaying()) await queue.node.play();
     } else if (interaction.commandName === "skip") {
         await interaction.deferReply();
         const queue = player.nodes.get(interaction.guildId);

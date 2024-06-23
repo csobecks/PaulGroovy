@@ -1,0 +1,4 @@
+export async function helping(interaction){
+    message="This music bot has the following functions:\n/Play will try to play the song provided.\n/Pause - This will pause the player.\n/Resume - This will resume the player.\n/Skip - This will skip the current song.\n/Stop - This will stop the player.\n/queue - show the current queue.\n/Ethan - This will give you a special message and picture from Ethan!\n/Violet - This will give you a nice quote and picture of Violet!\n/eggorleg - get an egg or a leg\n/paulpager - page paul over discord!\n/d20roll - roll a d20 and get a number\n/bitrate - pick a new value for groovybot bitrate\n/Help - This message will print again.\n";
+    return void interaction.followUp({content: message});
+}
