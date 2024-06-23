@@ -1,9 +1,9 @@
-import interactionHandler from "./interaction"
-import deployment from "./deploy"
+import interactionHandler from "../interaction.js"
+import deployment from "../deploy.js"
 
 import  Client from "discord.js"
 import  Player from "discord-player"
-import config from "./config.json"
+import config from "../config.json"
 
 const player = new Player(readyClient);
 
