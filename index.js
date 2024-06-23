@@ -25,7 +25,7 @@ client.on("ready", function (readyClient) {
     });
 });
 
-const player = new Player(client);
+const player = new Player.Player(client);
 
 
 
