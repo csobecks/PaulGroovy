@@ -1,4 +1,4 @@
-import google from "googlethis"
+import {google} from "googlethis"
 
 export async function eggorleg(interaction) {
     const choice=2*Math.round(Math.random());

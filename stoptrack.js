@@ -1,4 +1,4 @@
-import useQueue from "discord-player"
+import {useQueue} from "discord-player"
 
 export async function stop(interaction){
     const queue = useQueue(interaction.guild.id);
