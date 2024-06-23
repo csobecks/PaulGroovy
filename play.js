@@ -2,7 +2,7 @@ import { useMainPlayer } from "discord-player"
 
 export async function play(interaction) {
     const player = useMainPlayer();
-    console.log({player});
+    // console.log({player});
     const channel = interaction.member.voice.channel;
     
     if(!channel) return interaction.reply('You are not connected to a voice channel!');
@@ -10,7 +10,7 @@ export async function play(interaction) {
     const query = interaction.options.getString('query',true);
 
     await interaction.deferReply();
-    console.log({channel,query,interaction});
+    // console.log({channel,query,interaction});
     try{
         const{ track } = await player.play(channel,query,{
             nodeOptions:{

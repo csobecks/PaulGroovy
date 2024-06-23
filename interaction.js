@@ -33,31 +33,31 @@ export async function interactionHandler(interaction,client) {
         }
     }else{
         if (interaction.commandName === "play") {
-            play(interaction);
+            await play(interaction);
         } else if (interaction.commandName === "skip") {
-            skip(interaction);
+            await skip(interaction);
         } else if (interaction.commandName === "stop") {
-            stop(interaction);
+            await stop(interaction);
         } else if (interaction.commandName==="pause") {
-            pause(interaction);
+            await pause(interaction);
         } else if(interaction.commandName==="resume") {
-            resume(interaction);
+            await resume(interaction);
         }else if (interaction.commandName==="queue"){
-            currentqueue(interaction);
+            await currentqueue(interaction);
         }else if (interaction.commandName === "ethan"){
-            ethan(interaction);
+            await ethan(interaction);
         }else if (interaction.commandName === "violet"){
-            violet(interaction);
+            await violet(interaction);
         }else if(interaction.commandName==="help"){
-            helping(interaction);
+            await helping(interaction);
         }else if(interaction.commandName==="bitrate"){
-            bitrate(interaction);
+            await bitrate(interaction);
         }else if(interaction.commandName==="eggorleg"){
-            eggorleg(interaction);
+            await eggorleg(interaction);
         }else if(interaction.commandName==="paulpager"){
-            paulpager(interaction,client)
+            await paulpager(interaction,client)
         }else if(interaction.commandName==="d20roll"){
-            d20roll(interaction);
+            await d20roll(interaction);
         }else {
             interaction.reply({
                 content: "Unknown command!",
