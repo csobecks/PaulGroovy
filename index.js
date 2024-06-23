@@ -3,7 +3,7 @@ import deployment from "./deploy.js"
 
 import  Client from "discord.js"
 import  Player from "discord-player"
-import config from "./config.json"
+import token from "./config.json"
 
 const player = new Player(readyClient);
 
@@ -17,7 +17,7 @@ const client = new Client({
     ]
 });
 
-client.login(config.token);
+client.login(token);
 
 client.on("ready", function (readyClient) {
     console.log("Bot is online!");
