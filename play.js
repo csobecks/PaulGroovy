@@ -24,7 +24,7 @@ export async function play(interaction) {
             }
         });
 
-        return interaction.followUp(``);
+        // return null;
     } catch(e){
         return interaction.followUp(`Something went wrong: ${e}`);
     }
