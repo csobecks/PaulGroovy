@@ -42,10 +42,9 @@ client.on("interactionCreate", interactionHandler);
 
 
 
-player.events.on('playerStart', (interaction, track) => {
+player.events.on('playerStart', (queue, track) => {
     // Emitted when the player starts to play a song
-    const queue = useQueue(interaction.guild.id);
-    // return void interaction.followUp({content:`Started playing: **${track.title}**`});
+    queue.metadata.channel.send(`Started playing: **${track.title}**`);
 });
 
 player.events.on('audioTrackAdd', (interaction, track) => {
