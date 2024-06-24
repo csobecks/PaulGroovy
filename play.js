@@ -24,7 +24,7 @@ export async function play(interaction) {
             }
         });
 
-        return interaction.followUp(`**${track.title}** enqueued!`);
+        return interaction.followUp(``);
     } catch(e){
         return interaction.followUp(`Something went wrong: ${e}`);
     }
