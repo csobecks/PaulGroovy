@@ -44,6 +44,7 @@ client.on("interactionCreate", interactionHandler);
 player.events.on('playerStart', (queue, track) => {
     // Emitted when the player starts to play a song
     queue.metadata.channel.send(`Started playing: **${track.title}**`);
+    console.log({queue, track});
 });
 
 player.events.on('audioTrackAdd', (queue, track) => {
