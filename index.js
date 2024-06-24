@@ -1,6 +1,5 @@
 import { interactionHandler } from "./interaction.js"
 import { deployment } from "./deploy.js"
-import { useQueue } from "discord-player"
 
 import  Discord from "discord.js"
 import  Player from "discord-player"
@@ -28,8 +27,6 @@ client.on("ready", function (readyClient) {
 
 const player = new Player.Player(client);
 
-
-
 client.on("error",console.error);
 client.on("warn",console.warn);
 
@@ -39,6 +36,8 @@ player.extractors.loadDefault((ext)=>ext=='YouTubeExtractor');
 client.on("messageCreate", deployment);
 
 client.on("interactionCreate", interactionHandler);
+
+
 
 
 
