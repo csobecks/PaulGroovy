@@ -33,8 +33,8 @@ const player = new Player.Player(client);
 client.on("error",console.error);
 client.on("warn",console.warn);
 
-player.extractors.loadDefault();
-// player.extractors.loadDefault((ext)=>ext=='YouTubeExtractor');
+// player.extractors.loadDefault();
+player.extractors.loadDefault((ext)=>ext=='YouTubeExtractor');
 
 client.on("messageCreate", deployment);
 
