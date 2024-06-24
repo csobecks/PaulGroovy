@@ -57,29 +57,25 @@ player.events.on('audioTracksAdd', (queue) => {
     queue.metadata.channel.send(`Multiple Track's queued`);
 });
 
-player.events.on('playerSkip', (interaction, track) => {
+player.events.on('playerSkip', (queue, track) => {
     // Emitted when the audio player fails to load the stream for a song
-    const queue = useQueue(interaction.guild.id);
-    // return void interaction.followUp({content:`Skipping **${track.title}**`});
+    queue.metadata.channel.send(`Skipping **${track.title}**`);
 });
 
-player.events.on('disconnect', (interaction) => {
+player.events.on('disconnect', (queue) => {
     // Emitted when the bot leaves the voice channel
-    const queue = useQueue(interaction.guild.id);
-    // return void interaction.followUp({content:'leaving now'});
+    queue.metadata.channel.send('leaving now');
 });
 
-player.events.on('emptyChannel', (interaction) => {
+player.events.on('emptyChannel', (queue) => {
     // Emitted when the voice channel has been empty for the set threshold
     // Bot will automatically leave the voice channel with this event
-    const queue = useQueue(interaction.guild.id);
-    // return void interaction.followUp({content:`Leaving because no vc activity for the past 5 minutes`});
+    queue.metadata.channel.send(`Leaving because no vc activity for the past 5 minutes`);
 });
 
 player.events.on('emptyQueue', (interaction) => {
     // Emitted when the player queue has finished
-    const queue = useQueue(interaction.guild.id);
-    // return void interaction.followUp({content:'Queue finished!'});
+    queue.metadata.channel.send('Queue finished!');
 });
 player.events.on('error', (error) => {
     // Emitted when the player queue encounters error
