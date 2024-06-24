@@ -47,16 +47,14 @@ player.events.on('playerStart', (queue, track) => {
     queue.metadata.channel.send(`Started playing: **${track.title}**`);
 });
 
-player.events.on('audioTrackAdd', (interaction, track) => {
+player.events.on('audioTrackAdd', (queue, track) => {
     // Emitted when the player adds a single song to its queue
-    const queue = useQueue(interaction.guild.id);
-    // return void interaction.followUp({content:`Track **${track.title}** queued`});
+    queue.metadata.channel.send(`Track **${track.title}** queued`);
 });
 
-player.events.on('audioTracksAdd', (interaction) => {
+player.events.on('audioTracksAdd', (queue) => {
     // Emitted when the player adds multiple songs to its queue
-    const queue = useQueue(interaction.guild.id);
-    // return void interaction.followUp({content:`Multiple Track's queued`});
+    queue.metadata.channel.send(`Multiple Track's queued`);
 });
 
 player.events.on('playerSkip', (interaction, track) => {
