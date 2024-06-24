@@ -73,7 +73,7 @@ player.events.on('emptyChannel', (queue) => {
     queue.metadata.channel.send(`Leaving because no vc activity for the past 5 minutes`);
 });
 
-player.events.on('emptyQueue', (interaction) => {
+player.events.on('emptyQueue', (queue) => {
     // Emitted when the player queue has finished
     queue.metadata.channel.send('Queue finished!');
 });
