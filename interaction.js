@@ -17,19 +17,19 @@ export async function interactionHandler(interaction,client) {
 
     if (!interaction.member.voice.channel) {
         if (interaction.commandName === "ethan"){
-            ethan(interaction);
+            await ethan(interaction);
         }else if (interaction.commandName === "violet"){
-            violet(interaction);
+            await violet(interaction);
         }else if(interaction.commandName==="help"){
-            helping(interaction);
+            await helping(interaction);
         }else if(interaction.commandName==="d20roll"){
-            d20roll(interaction);
+            await d20roll(interaction);
         }else if(interaction.commandName==="eggorleg"){
-            eggorleg(interaction);
+            await eggorleg(interaction);
         }else if(interaction.commandName==="paulpager"){
-            paulpager(client);
+            await paulpager(client);
         }else{
-            return void interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
+            return interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
         }
     }else{
         if (interaction.commandName === "play") {
