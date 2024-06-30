@@ -29,7 +29,7 @@ export async function interactionHandler(interaction,client) {
         }else if(interaction.commandName==="paulpager"){
             await paulpager(client);
         }else{
-            return interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
+            return void interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
         }
     }else{
         if (interaction.commandName === "play") {
