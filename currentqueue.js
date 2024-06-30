@@ -5,5 +5,5 @@ export async function currentqueue(interaction){
     const tracks = queue.tracks.toArray();
     const currentTrack = queue.currentTrack;
 
-    return void interaction.followUp({content:`currently playing: ${currentTrack}\ncurrently queued: ${tracks}`});
+    return void interaction.reply({content:`currently playing: ${currentTrack}\ncurrently queued: ${tracks}`});
 }

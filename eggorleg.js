@@ -15,9 +15,9 @@ export async function eggorleg(interaction) {
     //console.log(choice2);
     
     if(typeof images[choice2]==="undefined"){
-        return interaction.followUp({content:`${query}`});
+        return interaction.reply({content:`${query}`});
     }
     else{
-        return interaction.followUp({content:`${query}\n${images[choice2].url}`});
+        return interaction.reply({content:`${query}\n${images[choice2].url}`});
     }
 }

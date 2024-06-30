@@ -87,5 +87,5 @@ export async function ethan(interaction){
     let message = messagePrompts[messageChoice];
     let picChoice= Math.floor(Math.random()*picops.length);
     let pic= picops[picChoice]
-    return void interaction.followUp({ files: [pic], content: message  });
+    return void interaction.reply({ files: [pic], content: message  });
 }

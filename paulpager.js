@@ -5,5 +5,5 @@ export async function paulpager(interaction, client){
         }
     });
     await interaction.deferReply();
-    return void interaction.followUp({content: "beeping paul"});
+    return void interaction.reply({content: "beeping paul"});
 }

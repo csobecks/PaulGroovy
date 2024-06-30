@@ -4,5 +4,5 @@ export async function bitrate(interaction) {
     const queue = useQueue(interaction.guildId);
     const value=interaction.options.getInteger('bitrate');
     queue.node.setBitrate(value);
-    return interaction.followUp ({content: `bitrate set to ${value} bits `});
+    return void interaction.reply ({content: `bitrate set to ${value} bits `});
 }

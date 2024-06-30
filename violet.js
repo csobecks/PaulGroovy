@@ -32,5 +32,5 @@ export async function violet(interaction){
     let vmessage = vquote[vmessageChoice];
     let vpicChoice= Math.floor(Math.random()*vpics.length);
     let vpic= vpics[vpicChoice]
-    return void interaction.followUp({files: [vpic], content: vmessage});
+    return void interaction.reply({files: [vpic], content: vmessage});
 }
