@@ -27,7 +27,7 @@ client.on("ready", function (readyClient) {
 });
 
 const player = new Player.Player(client);
-const oauthTokens = getOauthTokens();
+const oauthTokens = YoutubeiExtractor.getOauthTokens();
 
 player.extractors.register(YoutubeiExtractor,{authentication:oauthTokens});
 
