@@ -4,7 +4,6 @@ import { deployment } from "./deploy.js"
 import  Discord from "discord.js"
 import  Player from "discord-player"
 import object from "./config.json" assert { type: 'json' };
-import COOKIE from "./config.json"
 
 const client = new Discord.Client({
     intents: [
@@ -27,7 +26,7 @@ client.on("ready", function (readyClient) {
 });
 
 const player = new Player.Player(client,
-    {ytdlOptions:{requestOptions:{Headers:{cookie: COOKIE}}}}
+    {ytdlOptions:{requestOptions:{Headers:{cookie: object.COOKIE}}}}
 );
 
 client.on("error",console.error);
