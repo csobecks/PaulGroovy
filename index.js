@@ -28,9 +28,9 @@ client.on("ready", function (readyClient) {
 });
 
 const player = new Player.Player(client);
-// const oauthTokens = generateOauthTokens();
+const oauthTokens = await generateOauthTokens();
 
-player.extractors.register(YoutubeiExtractor,{});//{authentication:oauthTokens});
+player.extractors.register(YoutubeiExtractor,{authentication:oauthTokens});
 
 // const player = new Player.Player(client,
 //     {ytdlOptions:{requestOptions:{Headers:{cookie: object.COOKIE}}}}
