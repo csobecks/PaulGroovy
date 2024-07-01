@@ -1,6 +1,7 @@
 import { interactionHandler } from "./interaction.js"
 import { deployment } from "./deploy.js"
 import { YoutubeiExtractor } from "discord-player-youtubei"
+import { generateOauthTokens } from "discord-player-youtubei"
 
 import  Discord from "discord.js"
 import  Player from "discord-player"
@@ -27,7 +28,7 @@ client.on("ready", function (readyClient) {
 });
 
 const player = new Player.Player(client);
-const oauthTokens = YoutubeiExtractor.getOauthTokens();
+const oauthTokens = getOauthTokens();
 
 player.extractors.register(YoutubeiExtractor,{authentication:oauthTokens});
 
