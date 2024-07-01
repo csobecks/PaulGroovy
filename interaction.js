@@ -12,7 +12,7 @@ import { resume } from "./resumetrack.js"
 import { bitrate } from "./bitratetrack.js"
 import { currentqueue } from "./currentqueue.js"
 
-export async function interactionHandler(interaction,client) {
+export async function interactionHandler(interaction) {
     if (!interaction.isCommand() || !interaction.guildId) return;
 
     if (!interaction.member.voice.channel) {
@@ -27,7 +27,7 @@ export async function interactionHandler(interaction,client) {
         }else if(interaction.commandName==="eggorleg"){
             await eggorleg(interaction);
         }else if(interaction.commandName==="paulpager"){
-            await paulpager(interaction, client);
+            await paulpager(interaction);
         }else{
             return void interaction.reply({ content: "You are not in a voice channel!", ephemeral: true });
         }
@@ -55,7 +55,7 @@ export async function interactionHandler(interaction,client) {
         }else if(interaction.commandName==="eggorleg"){
             await eggorleg(interaction);
         }else if(interaction.commandName==="paulpager"){
-            await paulpager(interaction, client)
+            await paulpager(interaction)
         }else if(interaction.commandName==="d20roll"){
             await d20roll(interaction);
         }else {
