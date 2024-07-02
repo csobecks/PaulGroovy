@@ -1,7 +1,7 @@
 import { interactionHandler } from "./interaction.js"
 import { deployment } from "./deploy.js"
 import { YoutubeiExtractor } from "discord-player-youtubei"
-// import { generateOauthTokens } from "discord-player-youtubei"
+import { generateOauthTokens } from "discord-player-youtubei"
 // import { getTokens } from "./gettokens.js"
 
 import  Discord from "discord.js"
