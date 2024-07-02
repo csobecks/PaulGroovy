@@ -30,7 +30,7 @@ client.on("ready", function (readyClient) {
 
 const player = new Player.Player(client);
 // const oauthTokens = getTokens();
-const oauthTokens = [object.access_token, object.refresh_token, object.scope, object.token_type, object.expiry_date]
+const oauthTokens = object.access_token;
 
 player.extractors.register(YoutubeiExtractor,{authentication:oauthTokens});
 
