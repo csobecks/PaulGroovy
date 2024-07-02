@@ -30,9 +30,9 @@ client.on("ready", function (readyClient) {
 
 const player = new Player.Player(client);
 // generateOauthTokens();
-const oauthTokens = object.access_token;
+// const oauthTokens = object.access_token;
 
-player.extractors.register(YoutubeiExtractor,{authentication:oauthTokens});
+player.extractors.register(YoutubeiExtractor,{authentication:object.access_token});
 
 // const player = new Player.Player(client,
 //     {ytdlOptions:{requestOptions:{Headers:{cookie: object.COOKIE}}}}
