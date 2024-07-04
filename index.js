@@ -28,7 +28,7 @@ client.on("ready", function (readyClient) {
 
 const player = new Player.Player(client);
 
-player.extractors.register(YoutubeiExtractor,{authentication:object.access_token});
+player.extractors.register(YoutubeiExtractor,{authentication:object.youtube});
 
 client.on("error",console.error);
 client.on("warn",console.warn);
