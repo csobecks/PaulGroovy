@@ -1,8 +1,6 @@
 import { interactionHandler } from "./interaction.js"
 import { deployment } from "./deploy.js"
 import { YoutubeiExtractor } from "discord-player-youtubei"
-// import { generateOauthTokens } from "discord-player-youtubei"
-// import { getTokens } from "./gettokens.js"
 
 import  Discord from "discord.js"
 import  Player from "discord-player"
@@ -29,14 +27,8 @@ client.on("ready", function (readyClient) {
 });
 
 const player = new Player.Player(client);
-// generateOauthTokens();
-// const oauthTokens = object.access_token;
 
 player.extractors.register(YoutubeiExtractor,{authentication:object.access_token});
-
-// const player = new Player.Player(client,
-//     {ytdlOptions:{requestOptions:{Headers:{cookie: object.COOKIE}}}}
-// );
 
 client.on("error",console.error);
 client.on("warn",console.warn);
