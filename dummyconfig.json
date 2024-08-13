@@ -1,10 +1,4 @@
 {
     "token":"tokencodetokencodetokencode",
-    "youtube":{
-        "access_token":"youtubeaccesstokenfromGenerateOauthTokens()",
-        "refresh_token":"samedealasabove",
-        "scope":"youllneverguesswhatthisis",
-        "token_type":"hehesilly",
-        "expiry_date":"datetimeinfo"
-    }
+    "youtube":"access_token=blahblahblah; refresh_token=woohoo; scope=websites; token_types=sofun; expiry_date=time"
 }
