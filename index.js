@@ -34,7 +34,7 @@ client.on("error",console.error);
 client.on("warn",console.warn);
 
 // await player.extractors.loadDefault();
-// await player.extractors.loadDefault((ext)=>ext=='YouTubeExtractor');
+await player.extractors.loadDefault((ext)=>ext !== 'YouTubeExtractor');
 
 client.on("messageCreate", deployment);
 
