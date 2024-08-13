@@ -28,4 +28,5 @@ export async function play(interaction) {
     } catch(e){
         return interaction.followUp(`Something went wrong: ${e}`);
     }
+    return void interaction.reply()
 }
