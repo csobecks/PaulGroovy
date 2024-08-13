@@ -9,7 +9,7 @@ export async function play(interaction) {
     
     const query = interaction.options.getString('query',true);
 
-    await interaction.deferReply();
+    // await interaction.deferReply();
     // console.log({channel,query,interaction});
     try{
         const{ track } = await player.play(channel,query,{
@@ -28,5 +28,5 @@ export async function play(interaction) {
     } catch(e){
         return interaction.followUp(`Something went wrong: ${e}`);
     }
-    return void interaction.reply()
+    // return void interaction.reply()
 }
