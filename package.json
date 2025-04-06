@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "bgutils-js":"^3.2.0",
     "discord-player-youtubei":"^1.4.4",
     "discord-player": "^7.1.0",
     "discord.js": "^14.18.0",
