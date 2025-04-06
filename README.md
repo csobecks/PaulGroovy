@@ -3,6 +3,7 @@ Music bot for discord servers
 
 ## Packages Needed
 First install node.js then get the following
+- bgutils-js
 - discord.js 
 - discord-player
 - discord-player-youtubei
