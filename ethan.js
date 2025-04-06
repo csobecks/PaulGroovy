@@ -1,4 +1,5 @@
 export async function ethan(interaction){
+    await interaction.deferReply({ ephemeral: false });
     const picops = [
         "./ethan/ethan.png",
         "./ethan/ethan1.png",
@@ -87,5 +88,5 @@ export async function ethan(interaction){
     let message = messagePrompts[messageChoice];
     let picChoice= Math.floor(Math.random()*picops.length);
     let pic= picops[picChoice]
-    return void interaction.reply({ files: [pic], content: message  });
+    return void interaction.editReply({ files: [pic], content: message  });
 }

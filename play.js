@@ -4,15 +4,17 @@ export async function play(interaction) {
     const player = useMainPlayer();
     // console.log({player});
     const channel = interaction.member.voice.channel;
+    await interaction.deferReply({ ephemeral: false });
     
-    if(!channel) return interaction.reply('You are not connected to a voice channel!');
+    if(!channel) return interaction.editReply('You are not connected to a voice channel!');
+    
     
     const query = interaction.options.getString('query',true);
 
     // await interaction.deferReply();
     // console.log({channel,query,interaction});
     try{
-        const{ track } = await player.play(channel,query,{
+        await player.play(channel,query,{
             nodeOptions:{
                 leaveOnEmpty:true,
                 leaveOnEnd:true,
@@ -26,7 +28,8 @@ export async function play(interaction) {
 
         // return null;
     } catch(e){
-        return interaction.followUp(`Something went wrong: ${e}`);
+        return void interaction.editReply({content:`something went wrong: ${e}`});
+        //return void interaction.followUp(`Something went wrong: ${e}`);
     }
-    return void interaction.reply({content:"searching"})
+    return void interaction.editReply({content:"searching"});
 }

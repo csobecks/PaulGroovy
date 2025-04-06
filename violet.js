@@ -1,5 +1,5 @@
 export async function violet(interaction){
-    
+    await interaction.deferReply({ ephemeral: true });
     const vpics=["./violet/moon.JPG"]
 
     const vquote=[
@@ -32,5 +32,5 @@ export async function violet(interaction){
     let vmessage = vquote[vmessageChoice];
     let vpicChoice= Math.floor(Math.random()*vpics.length);
     let vpic= vpics[vpicChoice]
-    return void interaction.reply({files: [vpic], content: vmessage});
+    return void interaction.editReply({files: [vpic], content: vmessage});
 }

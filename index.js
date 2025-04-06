@@ -1,10 +1,11 @@
-import { interactionHandler } from "./interaction.js"
-import { deployment } from "./deploy.js"
-import { YoutubeiExtractor } from "discord-player-youtubei"
+import { interactionHandler } from "./interaction.js";
+import { deployment } from "./deploy.js";
+import { YoutubeiExtractor } from "discord-player-youtubei";
 
-import  Discord from "discord.js"
-import  Player from "discord-player"
-import object from "./config.json" assert { type: 'json' };
+import  Discord from "discord.js";
+import  Player from "discord-player";
+import  object from "./config.json" with { type: 'json' };
+
 
 const client = new Discord.Client({
     intents: [
@@ -26,15 +27,14 @@ client.on("ready", function (readyClient) {
     });
 });
 
-const player = new Player.Player(client);
+const player = new Player.Player(client, {});
 
-player.extractors.register(YoutubeiExtractor,{authentication:object.youtube});
+//await player.extractors.register(YoutubeiExtractor,{overrideBridgeMode: "yt", generateWithPoToken: true, streamOption: {useClient: "WEB"}});
+await player.extractors.register(YoutubeiExtractor,{generateWithPoToken: true, streamOption: {useClient: "WEB"}});
 
 client.on("error",console.error);
 client.on("warn",console.warn);
 
-// await player.extractors.loadDefault();
-await player.extractors.loadDefault((ext)=>!['YouTubeExtractor'].includes(ext));
 
 client.on("messageCreate", deployment);
 

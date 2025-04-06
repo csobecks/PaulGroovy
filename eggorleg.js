@@ -1,6 +1,7 @@
 import google from "googlethis"
 
 export async function eggorleg(interaction) {
+    await interaction.deferReply({ ephemeral: false });
     const choice=2*Math.round(Math.random());
     let query;
     
@@ -16,9 +17,9 @@ export async function eggorleg(interaction) {
     //console.log(choice2);
     
     if(typeof images[choice2]==="undefined"){
-        return interaction.reply({content:`${query}`});
+        return interaction.editReply({content:`${query}`});
     }
     else{
-        return interaction.reply({content:`${query}\n${images[choice2].url}`});
+        return interaction.editReply({content:`${query}\n${images[choice2].url}`});
     }
 }
